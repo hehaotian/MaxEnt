@@ -1,0 +1,8 @@
+class_num=0 feat_num=0
+
+Confusion matrix for the test data:
+row is the truth, column is the system output
+
+	
+
+ Test accuracy=NaN
