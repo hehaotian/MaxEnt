@@ -1,16 +1,7 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.TreeMap;
-import java.util.Set;
-import java.util.TreeSet;
+import java.io.*;
+import java.util.*;
 import java.lang.*;
-
+import java.math.*;
 
 public class MaxEnt {
 
@@ -42,6 +33,7 @@ public class MaxEnt {
         model.put(classLabel, new HashMap<String, Double>());
       }
       model.get(classLabel).put(word, weight);
+      feature_counts.add(word);
     }
 
     /* DEBUG: CLASS LABEL COLLECTION
@@ -71,34 +63,33 @@ public class MaxEnt {
       Map<String, Double> temp_pred_probs = new HashMap<String, Double>();
       
       double normal_z = 0.0;   
-      Iterator itr = classLabs.iterator();
-      while (itr.hasNext()) {
-        String label = "" + itr.next();
+      Iterator itr1 = classLabs.iterator();
+      while (itr1.hasNext()) {
+        String label = "" + itr1.next();
         double sum = 0.0;
             
         for (int i = 1; i < tokens.length; i++) {
           String word = tokens[i].replaceAll(":[\\d]+", "");
           sum += model.get(label).get(word);
         }
-        double result = exp(sum);
-        pred_probs.put(label, result);
+        double result = Math.exp(sum);
+        temp_pred_probs.put(label, result);
         normal_z += result;
       }
 
       Map<String, Double> final_pred_probs = new HashMap<String, Double>();
 
-      Iterator itr = classLabs.iterator();
-      while (itr.hasNext()) {
-        String label = "" + itr.next();
+      Iterator itr2 = classLabs.iterator();
+      while (itr2.hasNext()) {
+        String label = "" + itr2.next();
         final_pred_probs.put(label, temp_pred_probs.get(label) / normal_z);
       }
   
       Map<String, String> descend_probs = sortByComparator(final_pred_probs);
-      ps.println("array:" + instanceName + " " + correct_classLabel); 
+      ps.print("array:" + instanceName + " " + correct_classLabel); 
       int counter = 0;
       for (Map.Entry entry : descend_probs.entrySet()) {
         ps.print(" " + entry.getKey() + " " + entry.getValue());
-        ps.println();
         String key = "" + entry.getKey(); // predicted class
         counter ++;
         if (counter == 1) {
@@ -111,6 +102,7 @@ public class MaxEnt {
           }
         }
       }
+      ps.println();
     }
   }
    
