@@ -24,6 +24,18 @@ public class MaxEnt {
 
 	private Map<String, Map<String, Double>> get_model(String model_path) throws IOException {
 		BufferedReader model_file = new BufferedReader(new FileReader(model_path));
+    String line = "";
+    String classLabel = "";
+    while ((line = model_file.readLine()) != null) {
+      if (line.contains("FEATURES FOR CLASS")) {
+        classLabel = line.split(" ")[3];
+        continue;
+      }
+      String[] word_weight = line.split(" ");
+
+      
+      
+    }
 		return model;
 	}
 

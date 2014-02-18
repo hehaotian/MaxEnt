@@ -20,9 +20,7 @@ public class calc_emp_exp {
 	}
 
 	public static void build_model(String train_path) throws IOException {
-		
 		all_documents = 0;
-
 		BufferedReader train = new BufferedReader(new FileReader(train_path));
 		String line = "";
 		String classLabel = "";
