@@ -84,38 +84,43 @@ public class MaxEnt {
         String label = "" + itr2.next();
         final_pred_probs.put(label, temp_pred_probs.get(label) / normal_z);
       }
-
-      List<Map.Entry<String, Double>> entryList = new ArrayList<Map.Entry<String, Double>>();
-      entryList.addAll(final_pred_probs.entrySet());
-
-      Collections.sort(entryList, new Comparator<Map.Entry<String, Double>>() {
-         public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b) {
-            return b.getValue().compareTo(a.getValue());
-         }
-      }
-      );
+  
+      Map<String, String> descend_probs = sortByComparator(final_pred_probs);
       ps.print("array:" + instanceName + " " + correct_classLabel); 
-      
       int counter = 0;
-      for (Map.Entry<String, Double> a: entryList) {
-         String key = "" + a.getKey().replaceAll("[0-9]+", "");
-         double prob = a.getValue();
-         if (counter == 0) {
-            if (!test_matrix.containsKey(correct_classLabel)) {
-               test_matrix.put(correct_classLabel, new HashMap<String, Integer>());
-            }
-            if (test_matrix.get(correct_classLabel).containsKey(key)) {
-               test_matrix.get(correct_classLabel).put(key, test_matrix.get(correct_classLabel).get(key) + 1);
-            } else {
-               test_matrix.get(correct_classLabel).put(key, 1);
-            }
-         }
-         ps.print(" " + key + " " + prob);
-         counter ++;
+      for (Map.Entry entry : descend_probs.entrySet()) {
+        ps.print(" " + entry.getKey() + " " + entry.getValue());
+        String key = "" + entry.getKey(); // predicted class
+        counter ++;
+        if (counter == 1) {
+          if (!test_matrix.containsKey(correct_classLabel)) {
+            test_matrix.put(correct_classLabel, new HashMap<String, Integer>());
+          } else if (test_matrix.get(correct_classLabel).containsKey(key)) {
+            test_matrix.get(correct_classLabel).put(key, test_matrix.get(correct_classLabel).get(key) + 1);
+          } else {
+            test_matrix.get(correct_classLabel).put(key, 1);
+          }
+        }
       }
-      ps.println("");
+      ps.println();
     }
   }
+   
+  private Map sortByComparator(Map unsortMap) {
+    List list = new LinkedList(unsortMap.entrySet());
+    Collections.sort(list, new Comparator() {
+      public int compare(Object o1, Object o2) {
+        return ((Comparable) ((Map.Entry) (o2)).getValue())
+        .compareTo(((Map.Entry) (o1)).getValue());
+      }
+    });
+    Map sortedMap = new LinkedHashMap();
+    for (Iterator it = list.iterator(); it.hasNext();) {
+      Map.Entry entry = (Map.Entry) it.next();
+      sortedMap.put(entry.getKey(), entry.getValue());
+    }
+    return sortedMap;
+   }
 
 	public void report() {
       System.out.println("class_num=" + classLabs.size() + " feat_num=" + feature_counts.size());
