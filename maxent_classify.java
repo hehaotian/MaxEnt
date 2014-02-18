@@ -10,8 +10,8 @@ public class maxent_classify {
 		PrintStream res = new PrintStream(args[2]);
 
 		MaxEnt me = new MaxEnt(model_path);
-		me.predict(test_path, res);
-		me.report();
+		// me.predict(test_path, res);
+		// me.report();
 
 	}
 

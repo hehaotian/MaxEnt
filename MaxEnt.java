@@ -6,17 +6,19 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.Set;
 import java.util.TreeSet;
+import java.lang.*;
 
 
 public class MaxEnt {
 
 	private Map<String, Map<String, Double>> model = new HashMap<String, Map<String, Double>>();
 	private Map<String, Map<String, Integer>> test_data = new HashMap<String, Map<String, Integer>>();
-    private Map<String, Map<String, Integer>> test_matrix = new HashMap<String, Map<String, Integer>>();
+  private Map<String, Map<String, Integer>> test_matrix = new HashMap<String, Map<String, Integer>>();
 	private Set<String> classLabs = new TreeSet<String>();
-    private Set<String> feature_counts = new TreeSet<String>();
+  private Set<String> feature_counts = new TreeSet<String>();
 
 	public MaxEnt(String model_path) throws IOException {
 		this.model = get_model(model_path);
@@ -28,14 +30,26 @@ public class MaxEnt {
     String classLabel = "";
     while ((line = model_file.readLine()) != null) {
       if (line.contains("FEATURES FOR CLASS")) {
-        classLabel = line.split(" ")[3];
+        classLabel = line.trim().split(" ")[3];
+        classLabs.add(classLabel);
         continue;
-      }
+      }      
       String[] word_weight = line.split(" ");
-
-      
-      
+      String word = word_weight[1];
+      String weight_string = word_weight[2];
+      double weight = Double.parseDouble(weight_string);
+      if (!model.containsKey(classLabel)) {
+        model.put(classLabel, new HashMap<String, Double>());
+      }
+      model.get(classLabel).put(word, weight);
     }
+
+    /* DEBUG: CLASS LABEL COLLECTION
+    for (String class_4 : classLabs) {
+      System.out.print(class_4 + " ");
+    }
+    */
+    
 		return model;
 	}
 
