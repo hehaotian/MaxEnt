@@ -16,7 +16,7 @@ public class calc_emp_exp {
       String train_path = args[0];
       PrintStream emp_count = new PrintStream(args[1]);
       build_model(train_path);
-      calc(emp_count);
+      print(emp_count);
    }
    
    public static void build_model(String train_path) throws IOException {
@@ -48,7 +48,7 @@ public class calc_emp_exp {
       }
    }
    
-   public static void calc(PrintStream emp_count) throws IOException {
+   public static void print(PrintStream emp_count) throws IOException {
       
       for (String classLabel : train_data.keySet()) {
          for (String feature : train_data.get(classLabel).keySet()) {

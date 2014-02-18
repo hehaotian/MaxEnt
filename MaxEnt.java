@@ -6,7 +6,6 @@ import java.math.*;
 public class MaxEnt {
    
    private Map<String, Map<String, Double>> model = new HashMap<String, Map<String, Double>>();
-   // private Map<String, Map<String, Integer>> test_data = new HashMap<String, Map<String, Integer>>();
    private Map<String, Map<String, Integer>> test_matrix = new HashMap<String, Map<String, Integer>>();
    private Set<String> classLabs = new TreeSet<String>();
    private Set<String> feature_counts = new TreeSet<String>();
