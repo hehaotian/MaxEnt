@@ -15,6 +15,7 @@ public class calc_model_exp {
    public static Map<String, Map<String, Integer>> train_data = new TreeMap<String, Map<String, Integer>>();
    public static Map<String, Map<String, Double>> model_expect = new TreeMap<String, Map<String, Double>>();
    public static Set<String> classLabs = new TreeSet<String>();
+   public static Map<String, Double> default_weights = new HashMap<String, Double>();
    public static int all_documents;
 
    public static void main(String[] args) throws IOException {      
@@ -169,7 +170,7 @@ public class calc_model_exp {
       Iterator itr1 = classLabs.iterator();
       while (itr1.hasNext()) {
          String label = "" + itr1.next();
-         double sum = 0.0;
+         double sum = default_weights.get(label);
             
          for (int i = 1; i < tokens.length; i++) {
             String word = tokens[i].replaceAll(":[\\d]+", "");
@@ -198,6 +199,13 @@ public class calc_model_exp {
          if (line.contains("FEATURES FOR CLASS")) {
             classLabel = line.trim().split(" ")[3];
             continue;
+         }
+         if (line.contains("<default>")) {
+            String[] word_weight = line.split(" ");
+            String weight_string = word_weight[2];
+            double weight = Double.parseDouble(weight_string); 
+            default_weights.put(classLabel, weight);
+            continue;           
          }
          String[] word_weight = line.split(" ");
          String word = word_weight[1];

@@ -1,11 +1,11 @@
-class_num=3 feat_num=34507
+class_num=3 feat_num=34506
 
 Confusion matrix for the test data:
 row is the truth, column is the system output
 
 	talk.politics.guns talk.politics.mideast talk.politics.misc 
-talk.politics.guns 82 0 18 
-talk.politics.mideast 4 92 4 
-talk.politics.misc 21 5 74 
+talk.politics.guns 81 1 18 
+talk.politics.mideast 3 93 4 
+talk.politics.misc 20 6 74 
 
  Test accuracy=0.8266666666666667

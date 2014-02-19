@@ -1,3 +1,10 @@
+/*
+author: Haotian He
+
+created by 2014/02/13
+*/
+
+
 import java.io.*;
 import java.util.*;
 import java.lang.*;
@@ -9,6 +16,7 @@ public class MaxEnt {
    private Map<String, Map<String, Integer>> test_matrix = new HashMap<String, Map<String, Integer>>();
    private Set<String> classLabs = new TreeSet<String>();
    private Set<String> feature_counts = new TreeSet<String>();
+   private Map<String, Double> default_weights = new HashMap<String, Double>();
    
    public MaxEnt(String model_path) throws IOException {
       this.model = get_model(model_path);
@@ -24,6 +32,13 @@ public class MaxEnt {
             classLabs.add(classLabel);
             continue;
          }
+         if (line.contains("<default>")) {
+            String[] word_weight = line.split(" ");
+            String weight_string = word_weight[2];
+            double weight = Double.parseDouble(weight_string); 
+            default_weights.put(classLabel, weight);
+            continue;           
+         }
          String[] word_weight = line.split(" ");
          String word = word_weight[1];
          String weight_string = word_weight[2];
@@ -34,13 +49,6 @@ public class MaxEnt {
          model.get(classLabel).put(word, weight);
          feature_counts.add(word);
       }
-      
-      /* DEBUG: CLASS LABEL COLLECTION
-      for (String class_4 : classLabs) {
-      System.out.print(class_4 + " ");
-      }
-      */
-      
       return model;
    }
    
@@ -65,7 +73,7 @@ public class MaxEnt {
          Iterator itr1 = classLabs.iterator();
          while (itr1.hasNext()) {
             String label = "" + itr1.next();
-            double sum = 0.0;
+            double sum = default_weights.get(label);
             
             for (int i = 1; i < tokens.length; i++) {
                String word = tokens[i].replaceAll(":[\\d]+", "");
